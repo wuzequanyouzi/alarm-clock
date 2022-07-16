@@ -76,6 +76,7 @@ const createClockWindow = () => {
     frame: false,
     show: false,
     alwaysOnTop: true,
+    focusable: false, // 不可聚焦
     webPreferences: {
       preload,
       nodeIntegration: true,
@@ -93,7 +94,11 @@ const createClockWindow = () => {
 
   // 播放窗口
   clockWin.on('show', () => {
+    console.log('clockWin show');
     clockWin.webContents.send('send-audio', currentTask);
+  });
+  clockWin.on('hide', () => {
+    resetClockWindow();
   });
 };
 
@@ -148,11 +153,15 @@ let status = false;
 let currentTask = null;
 
 const fire = (arr) => {
+  clockWin?.hide();
+  clockWin.setPosition(size.width - 350, size.height - 110);
   currentTask = arr.shift();
+  clockWin?.show();
 };
 
 // 铃声时间到
 ipcMain.on('clock-now', (event, task) => {
+  console.log(task);
   tasks.push(task);
   if (!status) {
     status = true;
@@ -162,12 +171,31 @@ ipcMain.on('clock-now', (event, task) => {
 
 ipcMain.on('audio-end', (event) => {
   status = false;
-  tasks.length > 0 && fire(tasks);
+  if (tasks.length > 0) {
+    fire(tasks);
+  } else {
+    clockWin?.hide();
+  }
 });
 
 // 试听
 ipcMain.on('clock-try', (event, audioInfo) => {
   currentTask = audioInfo;
+  clockWin.setPosition(size.width - 350, size.height - 110);
   clockWin?.hide();
   clockWin?.show();
 });
+
+// 接听
+ipcMain.on('connect', (event) => {
+  clockWin.setPosition((size.width - 350) / 2, 100);
+  clockWin.setContentSize(350, 660);
+});
+
+ipcMain.on('break', (event) => {
+  clockWin?.hide();
+});
+
+const resetClockWindow = () => {
+  clockWin.setContentSize(340, 100);
+};

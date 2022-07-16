@@ -46,11 +46,9 @@ const props = defineProps({
   },
 });
 
-ipcRenderer.send('clock-now', 'ccc');
-
 const handleTry = (clockInfo: any) => {
   console.log(clockInfo);
-  ipcRenderer.send('clock-try', JSON.stringify(clockInfo));
+  ipcRenderer.send('clock-now', JSON.stringify(clockInfo));
 };
 </script>
 

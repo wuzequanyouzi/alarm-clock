@@ -18,18 +18,18 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, PropType } from 'vue';
+import { defineProps, PropType, defineEmits } from 'vue';
 interface AudioInfo {
-  key: number;
-  title: string;
-  audio: string;
-  desc: string;
-  enable: boolean;
-  date: (string | number)[];
-  time: string[];
-  avatar: string;
-  formatTime: any;
-  name: string;
+  key?: number;
+  title?: string;
+  audio?: string;
+  desc?: string;
+  enable?: boolean;
+  date?: (string | number)[];
+  time?: string[];
+  avatar?: string;
+  formatTime?: any;
+  name?: string;
 }
 const props = defineProps({
   audioInfo: {
@@ -38,12 +38,20 @@ const props = defineProps({
   },
 });
 
-const handleConnect = () => {};
-const handleBreak = () => {};
+const emits = defineEmits(['connect', 'break']);
+
+const handleConnect = () => {
+  console.log('handleConnect');
+  emits('connect');
+};
+const handleBreak = () => {
+  emits('break');
+};
 </script>
 
 <style lang="scss" scoped>
 .clock-mini {
+  user-select: none;
   width: 340px;
   height: 100px;
   background-color: #424347;
@@ -52,6 +60,7 @@ const handleBreak = () => {};
   padding: 10px 20px;
   box-sizing: border-box;
   &--avatar {
+    // pointer-events: none;
     margin-right: 10px;
   }
   &--container {
