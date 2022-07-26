@@ -12,6 +12,7 @@
           </div>
           <div class="clock-desc--body-item-right">
             <span>时间</span>
+            <SelectClockDialog @submit="handleSelectTime" />
           </div>
         </div>
         <div class="clock-desc--body-item">
@@ -38,6 +39,7 @@
 <script lang="ts" setup>
 import { ipcRenderer } from 'electron';
 import { defineProps } from 'vue';
+import SelectClockDialog from '../select-clock-dialog/index.vue';
 
 const props = defineProps({
   clockInfo: {
@@ -49,6 +51,10 @@ const props = defineProps({
 const handleTry = (clockInfo: any) => {
   console.log(clockInfo);
   ipcRenderer.send('clock-now', JSON.stringify(clockInfo));
+};
+
+const handleSelectTime = (time: number) => {
+  console.log(time);
 };
 </script>
 
