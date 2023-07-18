@@ -22,6 +22,7 @@ import dayjs from 'dayjs';
 import ClockListDesc from './components/ClockListDesc.vue';
 import zhangyugeSrc from '../../assets/images/zhangyuge.png';
 import zhangyugeAudio from '../../assets/mp3/zhangyuge.mp3';
+import { clockQueue } from '../../utils/task-queue';
 
 (window as any).dayjs = dayjs;
 
@@ -34,7 +35,7 @@ interface Clock {
   week: boolean[];
   time: string[];
   avatar: string;
-  clockTime: number[];
+  clockTime: any;
 }
 
 // 菜单
@@ -56,21 +57,30 @@ const clockList = ref<Clock[]>([
   {
     key: 0,
     title: '下班提醒',
-    audio: '',
+    audio: zhangyugeAudio,
     desc: '我要说的是，如果有一天我真的实现了我生命中的梦想...',
     enable: true,
     week: [true, true, true, true, false, false, false], // 下标表示星期
-    time: ['18:52:10'],
+    time: ['23:33:20', '23:33:25'],
     avatar: zhangyugeSrc,
-    clockTime: []
+    clockTime: new Map()
   },
 ]);
 
-const clockTask = ref([]);
+const handleTimeStamp = (clockTimes: any[], clockInfo: Clock, nowDate: any) => {
+  const clockTime = clockInfo.clockTime;
+  clockTimes.sort((a,b) => a.time - b.time).forEach((timeInfo) => {
+    if (!clockTime.has(timeInfo.key) && timeInfo.time > nowDate) {
+      clockTime.set(timeInfo.key, timeInfo.time);
+    }
+  })
+}
+
 const dayTimeStamp = 86400000; // 一天的毫秒数
 const computedTimes = () => {
   // 当天是周几
   const weekDay = dayjs().day();
+  const nowDate = Date.now();
   clockList.value.forEach((clock) => {
     // 距离设置闹钟日的毫秒数
     let distanceTime = 0;
@@ -78,18 +88,27 @@ const computedTimes = () => {
       // 当前日有设置闹钟
       if (clock.week[weekDay + weekIndex % 7]) {
         distanceTime = weekIndex * dayTimeStamp;
-        clock.clockTime = clock.time.map((time) => {
-          const alarmTime = dayjs(time, "HH:mm:ss").valueOf();
-          return distanceTime + alarmTime;
-        })
-        return ;
+        handleTimeStamp(clock.time.map((timeStr) => {
+          const alarmTime = dayjs(timeStr, "HH:mm:ss").valueOf();
+          console.log(distanceTime, 'distanceTime')
+          return {
+            key: timeStr,
+            time: distanceTime + alarmTime
+          };
+        }), clock, nowDate)
+        if (clock.clockTime.size) return;
       }
     }
   })
 }
 
-const handleClockNow = (timeInfo:Clock) => {
-  console.log(timeInfo)
+const handleClockNow = (timeInfo:Clock, key: string) => {
+  const { title } = timeInfo;
+  clockQueue.addTask(`${title}`, timeInfo, 30000, () => {
+    timeInfo.clockTime.delete(key);
+    computedTimes();
+  });
+  clockQueue.start();
 }
 
 

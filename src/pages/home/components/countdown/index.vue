@@ -31,13 +31,11 @@
 import dayjs from 'dayjs';
 import { ref, watchEffect, defineEmits } from "vue";
 interface Props {
-  timeStamp: number,
   clock: any
 }
 const props = withDefaults(
   defineProps<Props>(),
   {
-    timeStamp: 0,
     clock: {}
   }
 );
@@ -52,13 +50,12 @@ const timeInfo = ref({
 })
 let timer:any = null;
 
-const formatTime = (time: number) => {
+const formatTime = (key:string, alarmTime: number) => {
   const nowTime = Date.now();
-  const alarmTime = dayjs(time).valueOf();
   const diff = alarmTime - nowTime;
   if (diff < 0) {
     clearInterval(timer);
-    time && emit('clock-now', props.clock);
+    alarmTime && emit('clock-now', props.clock, key);
     return {
       dd: 0,
       hh: 0,
@@ -66,8 +63,8 @@ const formatTime = (time: number) => {
       ss: 0,
     }
   }
-  const dd = Math.floor(diff / 1000 / 60 / 60) % 24;
-  const hh = Math.floor(diff / 1000 / 60 / 60) % 60;
+  const dd = Math.floor(diff / 1000 / 60 / 60 / 24) ;
+  const hh = Math.floor(diff / 1000 / 60 / 60) % 24;
   const mm = Math.floor(diff / 1000 / 60) % 60;
   const ss = Math.floor(diff / 1000) % 60;
   return {
@@ -82,9 +79,9 @@ watchEffect(() => {
   if (timer) {
     clearInterval(timer);
   }
-  const time = dayjs(props.timeStamp).valueOf();
+  const clockTime: any = Array.from(props.clock?.clockTime)[0];
   timer = setInterval(() => {
-    timeInfo.value = formatTime(time);
+    timeInfo.value = formatTime(clockTime[0], clockTime[1]);
   }, 1000)
 })
 

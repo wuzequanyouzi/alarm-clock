@@ -1,8 +1,6 @@
 <template>
   <div
     class="clock-list"
-    v-infinite-scroll="handleScrollBottom"
-    :infinite-scroll-delay="500"
   >
     <el-card
       class="box-card"
@@ -25,7 +23,7 @@
           </div>
         </div>
         <div class="clock-list--item_bottom">
-          <CountDown :clock="item" :timeStamp="handleTimeStamp(item.clockTime)" v-bind="$attrs"/>
+          <CountDown v-bind="$attrs" :clock="item"/>
         </div>
       </div>
     </el-card>
@@ -61,15 +59,7 @@ const clockList = ref(props.list);
 const handleClick = (event: Event, item: any) => {
   emit("click", item);
 };
-const handleScrollBottom = () => {
-  console.log("bottom");
-};
 
-const nowDate = Date.now();
-
-const handleTimeStamp = (clockTime: number[]) => {
-  return clockTime.filter(time => nowDate <= time)[0];
-}
 </script>
 
 <style lang="scss" scoped>

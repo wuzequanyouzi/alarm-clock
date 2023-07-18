@@ -176,6 +176,9 @@ ipcMain.on('audio-end', (event) => {
   } else {
     clockWin?.hide();
   }
+
+  // 关闭闹钟，通知win窗口
+  win?.webContents.send('audio-end');
 });
 
 // 试听
