@@ -39,7 +39,6 @@ const currentClockInfo = ref<AudioInfo>({});
 const currentPlayAudioSrc = ref('');
 const isEndClockMusic = ref(false);
 ipcRenderer.on('send-audio', (event, audioInfo) => {
-  console.log('send-audio');
   status.value = false;
   isEndClockMusic.value = false;
   currentClockInfo.value = JSON.parse(audioInfo);

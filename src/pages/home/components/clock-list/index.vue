@@ -12,7 +12,7 @@
     >
       <div class="clock-list--item">
         <div class="clock-list--item_top">
-          <div>
+          <div style="display: flex; align-items: center;">
             <el-avatar :size="50" :src="item.avatar" />
           </div>
           <div class="clock-list--item_desc">
@@ -25,30 +25,7 @@
           </div>
         </div>
         <div class="clock-list--item_bottom">
-          <div class="clock-list--item_bottom-item">
-            <div class="clock-list--item_bottom-item-time">
-              {{ item.formatTime.dd }}
-            </div>
-            <div>天</div>
-          </div>
-          <div class="clock-list--item_bottom-item">
-            <div class="clock-list--item_bottom-item-time">
-              {{ item.formatTime.hh }}
-            </div>
-            <div>时</div>
-          </div>
-          <div class="clock-list--item_bottom-item">
-            <div class="clock-list--item_bottom-item-time">
-              {{ item.formatTime.mm }}
-            </div>
-            <div>分</div>
-          </div>
-          <div class="clock-list--item_bottom-item">
-            <div class="clock-list--item_bottom-item-time">
-              {{ item.formatTime.ss }}
-            </div>
-            <div>秒</div>
-          </div>
+          <CountDown :clock="item" :timeStamp="handleTimeStamp(item.clockTime)" v-bind="$attrs"/>
         </div>
       </div>
     </el-card>
@@ -56,8 +33,9 @@
 </template>
 
 <script lang="ts" setup>
-import Day from 'dayjs';
-import { defineProps, PropType, ref, defineEmits } from 'vue';
+import CountDown from "../countdown/index.vue";
+import Day from "dayjs";
+import { defineProps, PropType, ref, defineEmits } from "vue";
 interface List {
   key: number;
   title: string;
@@ -67,7 +45,7 @@ interface List {
   date: (string | number)[];
   time: string[];
   avatar: string;
-  formatTime: any;
+  clockTime: number[];
 }
 const props = defineProps({
   list: {
@@ -76,37 +54,22 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['click']);
+const emit = defineEmits(["click"]);
 
-const formatTime = (time: string[]) => {
-  const nowTime = Date.now();
-  const alarmTime = Day(time[0], 'HH:mm:ss').valueOf();
-  const diff = alarmTime - nowTime;
-  const dd = Math.floor(diff / 1000 / 60 / 60) % 24;
-  const hh = Math.floor(diff / 1000 / 60 / 60) % 60;
-  const mm = Math.floor(diff / 1000 / 60) % 60;
-  const ss = Math.floor(diff / 1000) % 60;
-  return {
-    dd,
-    hh,
-    mm,
-    ss,
-  };
-};
-
-const clockList = ref(
-  props.list.map((item) => {
-    item.formatTime = formatTime(item.time);
-    return item;
-  })
-);
+const clockList = ref(props.list);
 
 const handleClick = (event: Event, item: any) => {
-  emit('click', item);
+  emit("click", item);
 };
 const handleScrollBottom = () => {
-  console.log('bottom');
+  console.log("bottom");
 };
+
+const nowDate = Date.now();
+
+const handleTimeStamp = (clockTime: number[]) => {
+  return clockTime.filter(time => nowDate <= time)[0];
+}
 </script>
 
 <style lang="scss" scoped>
@@ -150,7 +113,7 @@ const handleScrollBottom = () => {
     align-items: center;
     &_top {
       z-index: 1;
-      padding: 10px;
+      padding: 14px 10px;
       display: flex;
       align-items: center;
       background-color: #937617;
@@ -169,23 +132,6 @@ const handleScrollBottom = () => {
     }
     &_bottom {
       width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px 0 10px;
-      background-color: #f2e7c2;
-      border-bottom-left-radius: 10px;
-      border-bottom-right-radius: 10px;
-      transform: translateY(-10px);
-      &-item {
-        padding: 0 8px;
-        text-align: center;
-        font-size: 12px;
-        &-time {
-          font-size: 16px;
-          font-weight: 600;
-        }
-      }
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="clock-list-desc">
     <div class="clock-list-desc--left">
-      <ClockList v-bind="$attrs" @click="handleClick" />
+      <ClockList v-bind="$attrs" @click="handleClick"/>
     </div>
     <div class="clock-list-desc--right">
       <ClockDesc :clock-info="currentClockInfo" />
