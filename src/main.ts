@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+import { ipcRenderer } from 'electron';
 // import './samples/node-api'
 
 import router from './router';
@@ -16,4 +17,5 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 app.mount('#app').$nextTick(() => {
   postMessage({ payload: 'removeLoading' }, '*');
+  ipcRenderer.send('loadConfig');
 });

@@ -1,6 +1,9 @@
 import { app, BrowserWindow, shell, ipcMain, screen } from 'electron';
 import { release } from 'os';
 import { join } from 'path';
+import { ROOT_PATH } from './constants';
+import { ClockWindow } from './clock-window';
+import { saveConfig, getConfig } from '../utils/index';
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration();
@@ -15,15 +18,8 @@ if (!app.requestSingleInstanceLock()) {
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
-export const ROOT_PATH = {
-  // /dist
-  dist: join(__dirname, '../..'),
-  // /dist or /public
-  public: join(__dirname, app.isPackaged ? '../..' : '../../../public'),
-};
-
 let win: BrowserWindow | null = null;
-let clockWin: BrowserWindow | null = null;
+let clockWin: ClockWindow = null;
 // Here, you can also use other preload
 const preload = join(__dirname, '../preload/index.js');
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin
@@ -64,48 +60,19 @@ async function createWindow() {
     if (url.startsWith('https:')) shell.openExternal(url);
     return { action: 'deny' };
   });
+  
+  const { setting } = getConfig();
+  // 读取配置
+  ipcMain.on('loadConfig', () => {
+    win.webContents.send('setConfig', setting);
+  })
 }
 
-const createClockWindow = () => {
-  clockWin = new BrowserWindow({
-    width: 340,
-    height: 100,
-    x: size.width - 350,
-    y: size.height - 110,
-    resizable: false,
-    frame: false,
-    show: false,
-    alwaysOnTop: true,
-    focusable: false, // 不可聚焦
-    webPreferences: {
-      preload,
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
-  // clockWin.setMenu(null);
-
-  if (app.isPackaged) {
-    clockWin.loadFile(`${indexHtml}/#about`);
-  } else {
-    clockWin.loadURL(`${url}/#about`);
-    // win.webContents.openDevTools()
-  }
-
-  // 播放窗口
-  clockWin.on('show', () => {
-    console.log('clockWin show');
-    clockWin.webContents.send('send-audio', currentTask);
-  });
-  clockWin.on('hide', () => {
-    resetClockWindow();
-  });
-};
 
 app.whenReady().then(() => {
   size = screen.getPrimaryDisplay().workAreaSize;
   createWindow();
-  createClockWindow();
+  clockWin = new ClockWindow(size);
 });
 
 app.on('window-all-closed', () => {
@@ -127,7 +94,6 @@ app.on('activate', () => {
     allWindows[0].focus();
   } else {
     createWindow();
-    createClockWindow();
   }
 });
 
@@ -143,62 +109,29 @@ ipcMain.handle('open-win', (event, arg) => {
     childWindow.loadFile(indexHtml, { hash: arg });
   } else {
     childWindow.loadURL(`${url}/#${arg}`);
-    // childWindow.webContents.openDevTools({ mode: "undocked", activate: true })
   }
 });
-
-const tasks = [];
-// 正在闹铃
-let status = false;
-let currentTask = null;
-
-const fire = (arr) => {
-  clockWin?.hide();
-  clockWin.setPosition(size.width - 350, size.height - 110);
-  currentTask = arr.shift();
-  clockWin?.show();
-};
 
 // 铃声时间到
 ipcMain.on('clock-now', (event, task) => {
-  console.log(task);
-  tasks.push(task);
-  if (!status) {
-    status = true;
-    fire(tasks);
-  }
+  clockWin.play(task);
 });
 
 ipcMain.on('audio-end', (event) => {
-  status = false;
-  if (tasks.length > 0) {
-    fire(tasks);
-  } else {
-    clockWin?.hide();
-  }
-
+  clockWin.setCurrentPlayInfo(null);
+  clockWin.window?.hide();
   // 关闭闹钟，通知win窗口
   win?.webContents.send('audio-end');
 });
 
 // 试听
-ipcMain.on('clock-try', (event, audioInfo) => {
-  currentTask = audioInfo;
-  clockWin.setPosition(size.width - 350, size.height - 110);
-  clockWin?.hide();
-  clockWin?.show();
+ipcMain.on('save-config', (event, playInfo) => {
+  console.log('save-config')
+  // clockWin.play(playInfo);
+  saveConfig(playInfo);
 });
 
 // 接听
 ipcMain.on('connect', (event) => {
-  clockWin.setPosition((size.width - 350) / 2, 100);
-  clockWin.setContentSize(350, 660);
+  clockWin.setCenterPosition();
 });
-
-ipcMain.on('break', (event) => {
-  clockWin?.hide();
-});
-
-const resetClockWindow = () => {
-  clockWin.setContentSize(340, 100);
-};

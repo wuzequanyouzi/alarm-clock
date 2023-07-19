@@ -57,7 +57,6 @@ const handleEnd = () => {
     handleBreakEnd();
   }
 };
-
 const handleStart = () => {};
 
 const handleBreakEnd = () => {

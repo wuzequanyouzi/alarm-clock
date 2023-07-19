@@ -4,7 +4,7 @@
   >
     <el-card
       class="box-card"
-      v-for="item in clockList"
+      v-for="item in props.list"
       shadow="hover"
       @click="(event) => handleClick(event, item)"
     >
@@ -53,8 +53,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["click"]);
-
-const clockList = ref(props.list);
 
 const handleClick = (event: Event, item: any) => {
   emit("click", item);

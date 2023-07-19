@@ -10,7 +10,7 @@
 <template>
   <Layout :menu="menu">
     <template #content>
-      <ClockListDesc :list="clockList" @clock-now="handleClockNow"/>
+      <ClockListDesc :list="clockList" @clock-now="handleClockNow" />
     </template>
   </Layout>
 </template>
@@ -23,6 +23,7 @@ import ClockListDesc from './components/ClockListDesc.vue';
 import zhangyugeSrc from '../../assets/images/zhangyuge.png';
 import zhangyugeAudio from '../../assets/mp3/zhangyuge.mp3';
 import { clockQueue } from '../../utils/task-queue';
+import { ipcRenderer } from 'electron';
 
 (window as any).dayjs = dayjs;
 
@@ -53,23 +54,35 @@ const menu = ref([
 ]);
 
 // 铃声列表
-const clockList = ref<Clock[]>([
-  {
-    key: 0,
-    title: '下班提醒',
-    audio: zhangyugeAudio,
-    desc: '我要说的是，如果有一天我真的实现了我生命中的梦想...',
-    enable: true,
-    week: [true, true, true, true, false, false, false], // 下标表示星期
-    time: ['23:33:20', '23:33:25'],
-    avatar: zhangyugeSrc,
-    clockTime: new Map()
-  },
-]);
+const clockList = ref<Clock[]>([]);
+
+ipcRenderer.on('setConfig', (event, config) => {
+  if (config.length) {
+    clockList.value = config.map((item: any) => {
+      item.clockTime = new Map();
+      return item;
+    });
+  } else {
+    clockList.value.push(
+      {
+        key: 0,
+        title: '下班提醒',
+        audio: zhangyugeAudio,
+        desc: '我要说的是，如果有一天我真的实现了我生命中的梦想...',
+        enable: true,
+        week: [true, true, true, true, false, false, false], // 下标表示星期
+        time: ['21:20:20', '23:33:25'],
+        avatar: zhangyugeSrc,
+        clockTime: new Map()
+      }
+    )
+  }
+  computedTimes();
+})
 
 const handleTimeStamp = (clockTimes: any[], clockInfo: Clock, nowDate: any) => {
   const clockTime = clockInfo.clockTime;
-  clockTimes.sort((a,b) => a.time - b.time).forEach((timeInfo) => {
+  clockTimes.sort((a, b) => a.time - b.time).forEach((timeInfo) => {
     if (!clockTime.has(timeInfo.key) && timeInfo.time > nowDate) {
       clockTime.set(timeInfo.key, timeInfo.time);
     }
@@ -86,33 +99,34 @@ const computedTimes = () => {
     let distanceTime = 0;
     for (let weekIndex = 0; weekIndex < 7; weekIndex++) {
       // 当前日有设置闹钟
-      if (clock.week[weekDay + weekIndex % 7]) {
+      if (clock.week[(weekDay + weekIndex) % 7]) {
         distanceTime = weekIndex * dayTimeStamp;
         handleTimeStamp(clock.time.map((timeStr) => {
           const alarmTime = dayjs(timeStr, "HH:mm:ss").valueOf();
-          console.log(distanceTime, 'distanceTime')
+          console.log(alarmTime, distanceTime, 'distanceTime')
           return {
             key: timeStr,
             time: distanceTime + alarmTime
           };
         }), clock, nowDate)
+        console.log(clock.clockTime.size)
         if (clock.clockTime.size) return;
       }
     }
   })
 }
 
-const handleClockNow = (timeInfo:Clock, key: string) => {
+const handleClockNow = (timeInfo: Clock, key: string) => {
   const { title } = timeInfo;
   clockQueue.addTask(`${title}`, timeInfo, 30000, () => {
     timeInfo.clockTime.delete(key);
     computedTimes();
+    console.log('end')
   });
   clockQueue.start();
 }
 
 
-computedTimes();
 // const timer = setInterval(computedTimes, 1000);
 onBeforeUnmount(() => {
   // clearInterval(timer);
