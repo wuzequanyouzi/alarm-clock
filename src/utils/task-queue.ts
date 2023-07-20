@@ -2,8 +2,8 @@ interface Task {
   name: string;
   task: Promise<any>;
   clockInfo: any;
-  resolve: ()=>{};
-  reject: ()=>{};
+  resolve: () => {};
+  reject: () => {};
   time: number;
   taskEnd: any;
 }
@@ -26,14 +26,14 @@ export default class ClockQueue {
     })
   }
 
-  addTask(name: string, clockInfo: any, time: number = 60000, taskEnd?: () => void) {
+  addTask(name: string, clockInfo: any, time: number = 60000, taskEnd?: () => void, option?: string) {
     let _resolve: any = null;
     let _reject: any = null;
     const task = new Promise((resolve, reject) => {
       _resolve = resolve;
       _reject = reject;
     })
-    this.tasks.push({
+    const taskInfo = {
       name,
       task,
       clockInfo,
@@ -41,7 +41,12 @@ export default class ClockQueue {
       reject: _reject,
       time,
       taskEnd
-    });
+    }
+    if (option !== 'push') {
+      this.tasks.unshift(taskInfo);
+    } else {
+      this.tasks.push(taskInfo)
+    }
   }
 
   // 执行任务
@@ -70,15 +75,15 @@ export default class ClockQueue {
   }
 
   // 时延
-  addSleepTask(time:number = 5000) {
-    this.addTask('时延', null, time);
+  addSleepTask(time: number = 5000) {
+    this.addTask('时延', null, time, () => { }, 'unshift');
   }
 
   start() {
     // 没任务，结束
     if (!this.tasks.length) {
       this.working = false;
-      return ;
+      return;
     }
     // 在工作，结束
     if (this.working) return;

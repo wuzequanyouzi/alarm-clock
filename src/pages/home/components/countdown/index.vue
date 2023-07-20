@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { ref, watchEffect, defineEmits } from "vue";
+import { ref, watchEffect, defineEmits, onBeforeUnmount } from "vue";
 interface Props {
   clock: any
 }
@@ -76,13 +76,21 @@ const formatTime = (key:string, alarmTime: number) => {
 };
 
 watchEffect(() => {
+  console.log(props.clock?.clockTime)
   if (timer) {
     clearInterval(timer);
   }
   const clockTime: any = Array.from(props.clock?.clockTime)[0];
+  timeInfo.value = formatTime(clockTime[0], clockTime[1]);
   timer = setInterval(() => {
     timeInfo.value = formatTime(clockTime[0], clockTime[1]);
   }, 1000)
+})
+
+onBeforeUnmount(() => {
+  if (timer) {
+    clearInterval(timer);
+  }
 })
 
 </script>
@@ -96,7 +104,6 @@ watchEffect(() => {
   justify-content: center;
   align-items: center;
   background: #ddd;
-  transform: translateY(-10px);
   border-radius: 0 0px 10px 10px;
   &-item {
     margin: 0 10px;

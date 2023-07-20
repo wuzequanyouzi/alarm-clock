@@ -128,7 +128,6 @@ ipcMain.on('audio-end', (event) => {
 ipcMain.on('save-config', (event, playInfo) => {
   console.log('save-config')
   // clockWin.play(playInfo);
-  saveConfig(playInfo);
 });
 
 // 接听

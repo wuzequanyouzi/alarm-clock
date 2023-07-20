@@ -4,7 +4,7 @@
       <ClockList v-bind="$attrs" @click="handleClick"/>
     </div>
     <div class="clock-list-desc--right">
-      <ClockDesc :clock-info="currentClockInfo" />
+      <ClockDesc v-bind="$attrs" :clock-info="currentClockInfo" />
     </div>
   </div>
 </template>
