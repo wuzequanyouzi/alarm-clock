@@ -27,6 +27,8 @@ export default class ClockQueue {
   }
 
   addTask(name: string, clockInfo: any, time: number = 60000, taskEnd?: () => void, option?: string) {
+    // 防止短时间内两个相同的任务进入队列
+    if (this.tasks.some(task => task?.name === name )) return;
     let _resolve: any = null;
     let _reject: any = null;
     const task = new Promise((resolve, reject) => {

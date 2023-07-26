@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2023-07-18 11:32:54
  * @LastEditors: zequan.wu
- * @LastEditTime: 2023-07-18 18:51:44
+ * @LastEditTime: 2023-07-26 14:45:40
  * @FilePath: \alarm-clock\src\pages\home\Index.vue
  * @Description: 
  * 
@@ -109,12 +109,14 @@ window.clockQueue = clockQueue;
 
 const handleClockNow = (timeInfo: Clock, key: string) => {
   const nowDate = Date.now();
-  const { title } = timeInfo;
-  clockQueue.addTask(`${title}`, timeInfo, 30000, () => {
+  const { key: _key } = timeInfo;
+  // 以某个闹钟的key+对应时间标识唯一任务
+  clockQueue.addTask(`${_key}_${key}`, timeInfo, 30000, () => {
     timeInfo.clockTime.delete(key);
     const afterNowDate = timeInfo.time.map((timeStr) => {
       return dayjs(timeStr, "HH:mm:ss").valueOf();
     }).some(item => item > nowDate)
+    // 没有时间大于当前时间，并且没有开启重复设置
     if (!afterNowDate && !timeInfo.week.some(item => item)) {
       timeInfo.enable = false;
       // BUG：多了一个任务
@@ -122,7 +124,6 @@ const handleClockNow = (timeInfo: Clock, key: string) => {
     } else {
       computedTimes();
     }
-    // computedTimes();
   });
   clockQueue.start();
 }

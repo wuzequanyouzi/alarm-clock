@@ -55,6 +55,7 @@ const formatTime = (key:string, alarmTime: number) => {
   const diff = alarmTime - nowTime;
   if (diff < 0) {
     clearInterval(timer);
+    // 这里触发可能有问题，因为每次闹钟结束，如果还有闹钟要进入队列，clock对象会变化，导致watch也会变化，进而导致可能重复触发2个相同时间的闹钟进入队列
     alarmTime && emit('clock-now', props.clock, key);
     return {
       dd: 0,
