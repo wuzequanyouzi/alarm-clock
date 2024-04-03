@@ -19,7 +19,7 @@
         </Block>
       </div>
     </div>
-    <div class="save-button"><el-button size="large" round @click="handleSave">保存</el-button></div>
+    <div class="save-button"><el-button class="button-dom" size="large" round @click="handleSave">保存</el-button></div>
   </div>
 </template>
 
@@ -29,6 +29,7 @@ import Time from './time/index.vue';
 import WeekCheckbox from './week-checkbox/index.vue';
 import { defineProps } from 'vue';
 import SelectClockDialog from './select-clock-dialog/index.vue';
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   clockInfo: {
@@ -48,8 +49,17 @@ const handleChangeTime = (time: number, type = 'add') => {
   emit('change-time', props.clockInfo, time, type)
 };
 
+const checkClockInfo = () => {
+  const { time } = props.clockInfo;
+  if (!time || time.length === 0) {
+    ElMessage.warning('请设置闹钟时间');
+    return false;
+  }
+  return true;
+}
+
 const handleSave = () => {
-  emit('save-config', props.clockInfo)
+  checkClockInfo() && emit('save-config', props.clockInfo);
 }
 </script>
 
@@ -88,6 +98,9 @@ const handleSave = () => {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
+    .button-dom {
+      padding: 0 30px 0;
+    }
   }
 }
 </style>
