@@ -3,23 +3,25 @@
     <div class="clock-desc-container">
       <div class="clock-desc--header">
         设置
-        <span @click="handleTry(clockInfo)">试听</span>
       </div>
       <div class="clock-desc--body">
         <Block icon="icon-shijian" label="时间">
           <SelectClockDialog @submit="handleChangeTime" />
-          <Time class="time-container" :time="props.clockInfo.time"
+          <Time class="time-container" :time="_clockInfo.time"
             @remove="(time: any) => handleChangeTime(time, 'delete')" />
         </Block>
         <Block icon="icon-riqi" label="重复设置">
-          <WeekCheckbox style="margin-top: 10px;" v-model="props.clockInfo.week" />
+          <WeekCheckbox style="margin-top: 10px;" v-model="_clockInfo.week" />
         </Block>
         <Block icon="icon-enable" label="启用">
-          <el-switch style="margin-top: 10px;" v-model="props.clockInfo.enable" />
+          <el-switch style="margin-top: 10px;" v-model="_clockInfo.enable" />
         </Block>
       </div>
     </div>
-    <div class="save-button"><el-button class="button-dom" size="large" round @click="handleSave">保存</el-button></div>
+    <div class="save-button">
+      <el-button class="button-dom" size="large" round @click="handleSave">保存</el-button>
+      <el-button class="button-dom" size="large" round >预览</el-button>
+    </div>
   </div>
 </template>
 
@@ -30,6 +32,8 @@ import WeekCheckbox from './week-checkbox/index.vue';
 import { defineProps } from 'vue';
 import SelectClockDialog from './select-clock-dialog/index.vue';
 import { ElMessage } from 'element-plus'
+import { ref, watch } from 'vue';
+import dayjs from 'dayjs';
 
 const props = defineProps({
   clockInfo: {
@@ -38,6 +42,8 @@ const props = defineProps({
   },
 });
 
+const _clockInfo = ref(props.clockInfo);
+
 const emit = defineEmits(['save-config', 'change-time']);
 
 const handleTry = (clockInfo: any) => {
@@ -45,12 +51,26 @@ const handleTry = (clockInfo: any) => {
   // emit('save-config', clockInfo)
 };
 
+watch(() => props.clockInfo, (newVal) => {
+  _clockInfo.value = JSON.parse(JSON.stringify(newVal));
+  console.log(_clockInfo)
+})
+
 const handleChangeTime = (time: number, type = 'add') => {
-  emit('change-time', props.clockInfo, time, type)
-};
+  const timeDate = dayjs(time);
+  const hour = timeDate.hour();
+  const minute = timeDate.minute();
+  const second = timeDate.second();
+  const timeStr = `${hour < 10 ? '0' + hour : hour}:${minute < 10 ? '0' + minute : minute}:${second < 10 ? '0' + second : second}`;
+  if (type === 'add') {
+    _clockInfo.value.time.push(timeStr)
+  } else {
+    _clockInfo.value.time = _clockInfo.value.time.filter(item => item !== timeStr);
+  }
+}
 
 const checkClockInfo = () => {
-  const { time } = props.clockInfo;
+  const { time } = _clockInfo.value;
   if (!time || time.length === 0) {
     ElMessage.warning('请设置闹钟时间');
     return false;
@@ -59,7 +79,7 @@ const checkClockInfo = () => {
 }
 
 const handleSave = () => {
-  checkClockInfo() && emit('save-config', props.clockInfo);
+  checkClockInfo() && emit('save-config', _clockInfo.value);
 }
 </script>
 

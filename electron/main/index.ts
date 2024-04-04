@@ -47,7 +47,7 @@ async function createWindow() {
       // contextIsolation: false,
     },
   })
-  Menu.setApplicationMenu(null);
+  // Menu.setApplicationMenu(null);
 
   if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
     win.loadURL(url)

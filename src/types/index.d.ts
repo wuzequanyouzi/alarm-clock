@@ -1,3 +1,12 @@
+/*
+ * @Author: zequan.wu
+ * @Date: 2024-04-04 20:55:34
+ * @LastEditors: zequan.wu
+ * @LastEditTime: 2024-04-04 22:02:08
+ * @FilePath: \alarm-clock\src\types\index.d.ts
+ * @Description: 
+ * 
+ */
 export interface List {
   key: number;
   title: string;
@@ -10,7 +19,7 @@ export interface List {
   clockTime: number[];
 }
 
-interface AudioInfo {
+export interface AudioInfo {
   key?: number;
   title?: string;
   audio?: string;
@@ -23,19 +32,20 @@ interface AudioInfo {
   name?: string;
 }
 
-interface Clock {
+export interface Clock {
   key: number;
   title: string;
   audio: string;
   desc: string;
   enable: boolean;
   week: boolean[];
+  date: (string | number)[];
   time: string[];
   avatar: string;
   clockTime: any;
 }
 
-interface Task {
+export interface Task {
   name: string;
   task: Promise<any>;
   clockInfo: any;

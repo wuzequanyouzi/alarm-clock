@@ -1,3 +1,12 @@
+<!--
+ * @Author: zequan.wu
+ * @Date: 2024-04-04 20:55:34
+ * @LastEditors: zequan.wu
+ * @LastEditTime: 2024-04-04 22:52:08
+ * @FilePath: \alarm-clock\src\pages\home\components\clock-list\index.vue
+ * @Description: 
+ * 
+-->
 <template>
   <div class="clock-list">
     <el-card class="box-card" v-for="item in props.list" :shadow="current === item.key ? 'always' : 'hover'"
@@ -23,27 +32,20 @@
         </Transition>
       </div>
     </el-card>
+    <AddCard class="add-card" :shadow="current === ADD_KEY ? 'always' : 'hover'" @click="handleAdd"/>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { Clock } from '../../../../types/index'
 import CountDown from "../countdown/index.vue";
+import AddCard from './AddCard.vue';
 import Day from "dayjs";
 import { defineProps, PropType, ref, defineEmits } from "vue";
-interface List {
-  key: number;
-  title: string;
-  audio: string;
-  desc: string;
-  enable: boolean;
-  date: (string | number)[];
-  time: string[];
-  avatar: string;
-  clockTime: number[];
-}
+import { getInitClockInfo } from '@/utils/index'; 
 const props = defineProps({
   list: {
-    type: Array as PropType<List[]>,
+    type: Array as PropType<Clock[]>,
     default: () => [],
   },
   currentKey: {
@@ -52,7 +54,9 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(["click"]);
+const ADD_KEY = -1;
+
+const emit = defineEmits(["click", 'add']);
 
 const current = ref(props.currentKey);
 
@@ -60,6 +64,12 @@ const handleClick = (event: Event, item: any) => {
   current.value = item.key;
   emit("click", item);
 };
+
+const handleAdd = () => {
+  const clockInfo = getInitClockInfo();
+  current.value = clockInfo.key;
+  emit("add", clockInfo);
+}
 
 </script>
 
@@ -91,7 +101,7 @@ const handleClick = (event: Event, item: any) => {
     background: #ededed;
   }
 
-  :v-deep {
+  :deep {
     .el-card {
       border: none;
     }
@@ -119,9 +129,11 @@ const handleClick = (event: Event, item: any) => {
       align-items: center;
       background-color: #937617;
       border-radius: 10px;
+      margin-bottom: 10px;
     }
 
     &_desc {
+      width: 200px;
       margin-left: 10px;
 
       &-title {
@@ -137,6 +149,8 @@ const handleClick = (event: Event, item: any) => {
 
     &_bottom {
       width: 100%;
+      height: 60px;
+      transform: translateY(-10px);
     }
 
     .enable-enter-active {
@@ -153,9 +167,12 @@ const handleClick = (event: Event, item: any) => {
       }
 
       100% {
-        transform: translateY(0px);
+        transform: translateY(-10px);
       }
     }
+  }
+  .add-card {
+    margin-top: 8px;
   }
 }
 </style>
