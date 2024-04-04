@@ -15,12 +15,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ipcRenderer } from 'electron';
 import { nextTick, ref } from 'vue';
 import MiniWindow from './components/MiniWindow.vue';
 import MainWindow from './components/MainWindow.vue';
 import _breakAudio from '../../assets/mp3/call-phone-end.mp3';
 import _connectAudio from '../../assets/mp3/call-phone-start.mp3';
+
+const { ipcRenderer } = window;
+
 interface AudioInfo {
   key?: number;
   title?: string;

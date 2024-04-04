@@ -1,3 +1,12 @@
+<!--
+ * @Author: zequan.wu
+ * @Date: 2024-04-04 20:55:34
+ * @LastEditors: zequan.wu
+ * @LastEditTime: 2024-04-04 20:57:38
+ * @FilePath: \alarm-clock\src\components\Layout.vue
+ * @Description: 
+ * 
+-->
 <template>
   <div class="layout">
     <div class="layout--left">
@@ -46,11 +55,11 @@ const activeMenuItem = ref('0');
 
 .menu {
   height: 100%;
-  :deep .el-menu-item {
+  :deep(.el-menu-item) {
     height: auto;
     padding: 0 !important;
   }
-  :deep .el-menu-item:hover {
+  :deep(.el-menu-item:hover) {
     background-color: #ddd;
   }
 }

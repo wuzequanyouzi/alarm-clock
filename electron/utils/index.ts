@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join } from 'node:path';
 import { app } from 'electron';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 export const saveConfig = (_playInfo) => {

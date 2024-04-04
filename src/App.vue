@@ -1,3 +1,12 @@
+<!--
+ * @Author: zequan.wu
+ * @Date: 2024-04-04 15:30:10
+ * @LastEditors: zequan.wu
+ * @LastEditTime: 2024-04-04 15:49:07
+ * @FilePath: \electron-vite-vue\src\App.vue
+ * @Description: 
+ * 
+-->
 <script setup lang="ts"></script>
 
 <template>

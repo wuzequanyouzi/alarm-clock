@@ -1,13 +1,5 @@
-interface Task {
-  name: string;
-  task: Promise<any>;
-  clockInfo: any;
-  resolve: () => {};
-  reject: () => {};
-  time: number;
-  taskEnd: any;
-}
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = window;
+import { Task } from '../types/index';
 export default class ClockQueue {
   tasks: Task[];
   working: boolean = false;

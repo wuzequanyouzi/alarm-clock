@@ -1,7 +1,7 @@
 <template>
   <div class="clock-list">
-    <el-card class="box-card" v-for="item in props.list" :shadow="current === item ? 'always' : 'hover'"
-      @click="(event) => handleClick(event, item)">
+    <el-card class="box-card" v-for="item in props.list" :shadow="current === item.key ? 'always' : 'hover'"
+      @click="(event: Event) => handleClick(event, item)">
       <div class="clock-list--item">
         <div class="clock-list--item_top">
           <div style="display: flex; align-items: center;">
@@ -46,14 +46,18 @@ const props = defineProps({
     type: Array as PropType<List[]>,
     default: () => [],
   },
+  currentKey: {
+    type: Number,
+    default: 1
+  }
 });
 
 const emit = defineEmits(["click"]);
 
-const current = ref({});
+const current = ref(props.currentKey);
 
 const handleClick = (event: Event, item: any) => {
-  current.value = item;
+  current.value = item.key;
   emit("click", item);
 };
 
@@ -87,7 +91,7 @@ const handleClick = (event: Event, item: any) => {
     background: #ededed;
   }
 
-  :deep {
+  :v-deep {
     .el-card {
       border: none;
     }

@@ -1,9 +1,9 @@
 import { app, BrowserWindow, shell, ipcMain, screen } from 'electron';
-import { join } from 'path';
-import { ROOT_PATH } from './constants';
+import { join } from 'node:path';
+import { preload } from './initConfig';
 
-const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}`;
-const indexHtml = join(ROOT_PATH.dist, 'index.html');
+const url = process.env.VITE_DEV_SERVER_URL;
+const indexHtml = join(process.env.DIST, 'index.html');
 
 export class ClockWindow {
   window: BrowserWindow | null = null;
@@ -27,16 +27,16 @@ export class ClockWindow {
       alwaysOnTop: true,
       focusable: false, // 不可聚焦
       webPreferences: {
+        preload,
         nodeIntegration: true,
-        contextIsolation: false,
+        contextIsolation: true,
       },
     });
 
-    if (app.isPackaged) {
-      this.window.loadFile(`${indexHtml}/#about`);
+    if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
+      this.window.loadURL(`${url}/#about`)
     } else {
-      this.window.loadURL(`${url}/#about`);
-      // win.webContents.openDevTools()
+      this.window.loadFile(`${indexHtml}/#about`)
     }
   }
 

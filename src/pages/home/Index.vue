@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Clock } from '@/types/index';
 import { ref, onBeforeUnmount, onBeforeMount } from 'vue';
 import Layout from '../../components/Layout.vue';
 import dayjs from 'dayjs';
@@ -24,21 +25,6 @@ import ClockListDesc from './components/ClockListDesc.vue';
 import zhangyugeSrc from '../../assets/images/zhangyuge.png';
 import zhangyugeAudio from '../../assets/mp3/zhangyuge.mp3';
 import { clockQueue } from '../../utils/task-queue';
-import { ipcRenderer } from 'electron';
-
-(window as any).dayjs = dayjs;
-
-interface Clock {
-  key: number;
-  title: string;
-  audio: string;
-  desc: string;
-  enable: boolean;
-  week: boolean[];
-  time: string[];
-  avatar: string;
-  clockTime: any;
-}
 
 // 菜单
 const menu = ref([
@@ -104,8 +90,6 @@ const computedTimes = () => {
     }
   })
 }
-
-window.clockQueue = clockQueue;
 
 const handleClockNow = (timeInfo: Clock, key: string) => {
   const nowDate = Date.now();
