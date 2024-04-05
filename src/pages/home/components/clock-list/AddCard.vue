@@ -1,3 +1,12 @@
+<!--
+ * @Author: zequan.wu
+ * @Date: 2024-04-04 21:03:03
+ * @LastEditors: zequan.wu
+ * @LastEditTime: 2024-04-05 14:12:52
+ * @FilePath: \alarm-clock\src\pages\home\components\clock-list\AddCard.vue
+ * @Description: 
+ * 
+-->
 <template>
   <el-card v-bind="$attrs" class="add-card-skeleton" shadow="hover" @click="handleAdd">
     <el-skeleton class="add-card-skeleton__body">
@@ -38,9 +47,12 @@ const handleAdd = () => {
 .add-card-skeleton {
   position: sticky;
   bottom: 0;
-  z-index: 9999;
+  z-index: 10;
   padding: 0 0 8px;
   cursor: pointer;
+  &:active {
+    transform: scale(0.9);
+  }
   &__body {
     &-wrap {
       height: 140px;

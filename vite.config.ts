@@ -1,6 +1,16 @@
+/*
+ * @Author: zequan.wu
+ * @Date: 2024-04-04 15:30:51
+ * @LastEditors: zequan.wu
+ * @LastEditTime: 2024-04-05 13:44:27
+ * @FilePath: \alarm-clock\vite.config.ts
+ * @Description: 
+ * 
+ */
 import fs from 'node:fs'
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite'
+import vueJsx from '@vitejs/plugin-vue-jsx';
 import vue from '@vitejs/plugin-vue'
 import electron from 'vite-plugin-electron/simple'
 import pkg from './package.json'
@@ -21,6 +31,7 @@ export default defineConfig(({ command }) => {
     },
     plugins: [
       vue(),
+      vueJsx(),
       electron({
         main: {
           // Shortcut of `build.lib.entry`

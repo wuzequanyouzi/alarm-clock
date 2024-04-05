@@ -10,10 +10,16 @@
           <Time class="time-container" :time="_clockInfo.time"
             @remove="(time: any) => handleChangeTime(time, 'delete')" />
         </Block>
+        
+        <Block :size="26" icon="icon-music" label="铃声">
+          <MusicItem :currentMusic="_clockInfo.audio"/>
+        </Block>
+
         <Block icon="icon-riqi" label="重复设置">
           <WeekCheckbox style="margin-top: 10px;" v-model="_clockInfo.week" />
         </Block>
-        <Block icon="icon-enable" label="启用">
+
+        <Block :size="26" icon="icon-enable" label="启用">
           <el-switch style="margin-top: 10px;" v-model="_clockInfo.enable" />
         </Block>
       </div>
@@ -26,8 +32,10 @@
 </template>
 
 <script lang="ts" setup>
+import { Clock } from "../../../../types/index.d";
 import Block from '../../../../components/Block.vue';
 import Time from './time/index.vue';
+import MusicItem from './music-item/Index.vue';
 import WeekCheckbox from './week-checkbox/index.vue';
 import { defineProps } from 'vue';
 import SelectClockDialog from './select-clock-dialog/index.vue';
@@ -37,7 +45,7 @@ import dayjs from 'dayjs';
 
 const props = defineProps({
   clockInfo: {
-    type: Object,
+    type: Object as () => Clock,
     default: () => ({}),
   },
 });
@@ -70,9 +78,13 @@ const handleChangeTime = (time: number, type = 'add') => {
 }
 
 const checkClockInfo = () => {
-  const { time } = _clockInfo.value;
+  const { time, aiduo } = _clockInfo.value;
   if (!time || time.length === 0) {
     ElMessage.warning('请设置闹钟时间');
+    return false;
+  }
+  if (!aiduo || !aiduo.path) {
+    ElMessage.warning('请设置闹钟声音');
     return false;
   }
   return true;

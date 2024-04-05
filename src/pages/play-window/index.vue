@@ -1,3 +1,12 @@
+<!--
+ * @Author: zequan.wu
+ * @Date: 2024-04-04 20:55:34
+ * @LastEditors: zequan.wu
+ * @LastEditTime: 2024-04-05 12:16:55
+ * @FilePath: \alarm-clock\src\pages\play-window\index.vue
+ * @Description: 
+ * 
+-->
 <template>
   <MiniWindow
     v-if="!status"
@@ -15,6 +24,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Clock } from '@types/index.d';
 import { nextTick, ref } from 'vue';
 import MiniWindow from './components/MiniWindow.vue';
 import MainWindow from './components/MainWindow.vue';
@@ -23,21 +33,9 @@ import _connectAudio from '../../assets/mp3/call-phone-start.mp3';
 
 const { ipcRenderer } = window;
 
-interface AudioInfo {
-  key?: number;
-  title?: string;
-  audio?: string;
-  desc?: string;
-  enable?: boolean;
-  date?: (string | number)[];
-  time?: string[];
-  avatar?: string;
-  formatTime?: any;
-  name?: string;
-}
 const status = ref(false);
 const audio = ref<HTMLAudioElement>();
-const currentClockInfo = ref<AudioInfo>({});
+const currentClockInfo = ref<Clock>({});
 const currentPlayAudioSrc = ref('');
 const isEndClockMusic = ref(false);
 ipcRenderer.on('send-audio', (event, audioInfo) => {
@@ -45,7 +43,7 @@ ipcRenderer.on('send-audio', (event, audioInfo) => {
   isEndClockMusic.value = false;
   currentClockInfo.value = JSON.parse(audioInfo);
   currentPlayAudioSrc.value = `${
-    currentClockInfo.value.audio
+    currentClockInfo.value.audio.path
   }?time=${Date.now()}`;
   nextTick(() => {
     audio.value?.play();

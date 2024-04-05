@@ -1,10 +1,19 @@
+// @font-face {
+//   font-family: "iconfont"; /* Project id 3496580 */
+//   /* Color fonts */
+//   src: 
+//        url('../font/iconfont.woff2') format('woff2'),
+//        url('../font/iconfont.woff') format('woff'),
+//        url('../font/iconfont.ttf') format('truetype');
+// }
+/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 @font-face {
-  font-family: "iconfont"; /* Project id 3496580 */
-  /* Color fonts */
-  src: 
-       url('../font/iconfont.woff2') format('woff2'),
-       url('../font/iconfont.woff') format('woff'),
-       url('../font/iconfont.ttf') format('truetype');
+  font-family: 'iconfont';
+  /* Project id 3496580 */
+  src:
+    url('//at.alicdn.com/t/c/font_3496580_7tekteb11sp.woff2?t=1712296048500') format('woff2'),
+    url('//at.alicdn.com/t/c/font_3496580_7tekteb11sp.woff?t=1712296048500') format('woff'),
+    url('//at.alicdn.com/t/c/font_3496580_7tekteb11sp.ttf?t=1712296048500') format('truetype');
 }
 
 .iconfont {
@@ -13,6 +22,26 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-audio:before {
+  content: "\e657";
+}
+
+.icon-music-item:before {
+  content: "\e6e0";
+}
+
+.icon-add-music:before {
+  content: "\e611";
+}
+
+.icon-music-open:before {
+  content: "\e62c";
+}
+
+.icon-music:before {
+  content: "\e73a";
 }
 
 .icon-laidian:before {
@@ -42,4 +71,3 @@
 .icon-lingsheng:before {
   content: "\e60a";
 }
-

@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2023-07-18 11:32:54
  * @LastEditors: zequan.wu
- * @LastEditTime: 2023-07-26 14:45:40
+ * @LastEditTime: 2024-04-05 12:51:07
  * @FilePath: \alarm-clock\src\pages\home\Index.vue
  * @Description: 
  * 
@@ -18,6 +18,7 @@
 
 <script lang="ts" setup>
 import { Clock } from '@/types/index';
+import { getNorMalClockList } from '@/config/index';
 import { ref, onBeforeUnmount, onBeforeMount } from 'vue';
 import Layout from '../../components/Layout.vue';
 import dayjs from 'dayjs';
@@ -159,17 +160,7 @@ const loadSetting = () => {
       return item;
     })
   } else {
-    clockList.value = [{
-      key: 0,
-      title: '下班提醒',
-      audio: zhangyugeAudio,
-      desc: '我要说的是，如果有一天我真的实现了我生命中的梦想...',
-      enable: true,
-      week: [true, true, true, true, false, false, false], // 下标表示星期
-      time: ['21:20:20', '23:33:25'],
-      avatar: zhangyugeSrc,
-      clockTime: new Map()
-    }]
+    clockList.value = getNorMalClockList();
   }
   computedTimes();
 }

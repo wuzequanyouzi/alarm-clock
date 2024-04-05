@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2024-04-04 20:55:34
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-04 22:52:08
+ * @LastEditTime: 2024-04-05 10:47:37
  * @FilePath: \alarm-clock\src\pages\home\components\clock-list\index.vue
  * @Description: 
  * 
@@ -12,7 +12,7 @@
     <el-card class="box-card" v-for="item in props.list" :shadow="current === item.key ? 'always' : 'hover'"
       @click="(event: Event) => handleClick(event, item)">
       <div class="clock-list--item">
-        <div class="clock-list--item_top">
+        <div class="clock-list--item_top" :style="item.style">
           <div style="display: flex; align-items: center;">
             <el-avatar :size="50" :src="item.avatar" />
           </div>
@@ -26,7 +26,7 @@
           </div>
         </div>
         <Transition name="enable">
-          <div class="clock-list--item_bottom" v-if="item.enable">
+          <div class="clock-list--item_bottom" :class="{ 'not-enable': !item.enable }" >
             <CountDown style="transform: translateY(-10px);" v-bind="$attrs" :clock="item" />
           </div>
         </Transition>
@@ -150,7 +150,13 @@ const handleAdd = () => {
     &_bottom {
       width: 100%;
       height: 60px;
+      transition: all 0.5s;
       transform: translateY(-10px);
+    }
+    
+    .not-enable {
+      height: 0;
+      transform: translateY(-70px);
     }
 
     .enable-enter-active {
@@ -159,16 +165,6 @@ const handleAdd = () => {
 
     .enable-leave-active {
       animation: bounce-in 0.5s reverse;
-    }
-
-    @keyframes bounce-in {
-      0% {
-        transform: translateY(-100%);
-      }
-
-      100% {
-        transform: translateY(-10px);
-      }
     }
   }
   .add-card {
