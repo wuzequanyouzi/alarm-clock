@@ -78,12 +78,12 @@ const handleChangeTime = (time: number, type = 'add') => {
 }
 
 const checkClockInfo = () => {
-  const { time, aiduo } = _clockInfo.value;
+  const { time, audio } = _clockInfo.value;
   if (!time || time.length === 0) {
     ElMessage.warning('请设置闹钟时间');
     return false;
   }
-  if (!aiduo || !aiduo.path) {
+  if (!audio || !audio.path) {
     ElMessage.warning('请设置闹钟声音');
     return false;
   }
