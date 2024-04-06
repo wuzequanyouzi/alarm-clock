@@ -38,7 +38,6 @@ export class ClockWindow {
     } else {
       // TODO: 打包之后使用 loadFile 会有异常 待解决
       this.window.loadURL(`${indexHtml}#/about`)
-      this.window.webContents.openDevTools()
     }
   }
 
