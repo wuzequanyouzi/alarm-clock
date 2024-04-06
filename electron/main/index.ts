@@ -34,7 +34,7 @@ async function createWindow() {
     width: 1024,
     height: 768,
     resizable: false,
-    icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
+    icon: join(process.env.VITE_PUBLIC, 'logo.jpg'),
     webPreferences: {
       preload,
       nodeIntegration: true,

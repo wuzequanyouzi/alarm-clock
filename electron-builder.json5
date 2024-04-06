@@ -3,9 +3,9 @@
  */
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "YourAppID",
+  "appId": "youzi",
   "asar": true,
-  "productName": "YourAppName",
+  "productName": "来电提醒",
   "directories": {
     "output": "release/${version}"
   },
@@ -14,12 +14,14 @@
     "dist-electron"
   ],
   "mac": {
+    icon: 'public/logo.jpg',
     "target": [
       "dmg"
     ],
     "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
   },
   "win": {
+    icon: 'public/logo.jpg',
     "target": [
       {
         "target": "nsis",
@@ -37,6 +39,7 @@
     "deleteAppDataOnUninstall": false
   },
   "linux": {
+    icon: 'public/logo.jpg',
     "target": [
       "AppImage"
     ],

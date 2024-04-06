@@ -22,3 +22,17 @@
   border-radius: 10px;
   background: #ededed;
 }
+
+
+body::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url(./logo.jpg);
+  opacity: 0.1; /* 设置透明度为50% */
+  pointer-events: none;
+}

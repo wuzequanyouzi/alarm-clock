@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2024-04-04 15:30:51
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-06 20:39:16
+ * @LastEditTime: 2024-04-06 22:06:10
  * @FilePath: \alarm-clock\README.md
  * @Description: 
  * 
@@ -28,3 +28,5 @@
 - [ ] 闹钟可播放视频
 - [ ] 优化闹钟队列
 - [ ] 自定义标题导航栏
+- [ ] 打包之后，小窗口无法加载（!）
+- [ ] 打包之后，关闭应用，进程还在（!）

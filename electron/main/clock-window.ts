@@ -34,9 +34,11 @@ export class ClockWindow {
     });
 
     if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
-      this.window.loadURL(`${url}/#about`)
+      this.window.loadURL(`${url}/#/about`)
     } else {
-      this.window.loadFile(`${indexHtml}/#about`)
+      // TODO: 打包之后使用 loadFile 会有异常 待解决
+      this.window.loadURL(`${indexHtml}#/about`)
+      this.window.webContents.openDevTools()
     }
   }
 

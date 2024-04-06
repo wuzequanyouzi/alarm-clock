@@ -46,10 +46,6 @@ const routes = [
     path: '/about',
     component: playWindow,
   },
-  {
-    path: '/about',
-    component: Setting,
-  },
 ];
 
 const router = createRouter({

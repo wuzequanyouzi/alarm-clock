@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2024-04-04 20:55:34
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-06 20:01:27
+ * @LastEditTime: 2024-04-06 21:09:16
  * @FilePath: \alarm-clock\src\components\Layout.vue
  * @Description: 
  * 
@@ -73,6 +73,7 @@ const handleJump = (menuItem: any) => {
 
 .menu {
   height: 100%;
+  opacity: 0.9;
   :deep(.el-menu-item) {
     height: auto;
     padding: 0 !important;
