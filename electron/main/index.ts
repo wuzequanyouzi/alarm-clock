@@ -47,7 +47,7 @@ async function createWindow() {
       // contextIsolation: false,
     },
   })
-  // Menu.setApplicationMenu(null);
+  Menu.setApplicationMenu(null);
 
   if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
     win.loadURL(url)
@@ -136,9 +136,8 @@ ipcMain.on('audio-end', (event) => {
 });
 
 // 试听
-ipcMain.on('save-config', (event, playInfo) => {
-  console.log('save-config')
-  // clockWin.play(playInfo);
+ipcMain.on('try-play', (event, task) => {
+  clockWin.play(task);
 });
 
 // 接听

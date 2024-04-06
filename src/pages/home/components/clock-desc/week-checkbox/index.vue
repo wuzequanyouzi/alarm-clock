@@ -1,7 +1,16 @@
+<!--
+ * @Author: zequan.wu
+ * @Date: 2024-04-04 20:55:34
+ * @LastEditors: zequan.wu
+ * @LastEditTime: 2024-04-06 19:55:21
+ * @FilePath: \alarm-clock\src\pages\home\components\clock-desc\week-checkbox\index.vue
+ * @Description: 
+ * 
+-->
 <template>
   <div>
     <el-checkbox-group :model-value="checkList" @change="handleChange" size="large">
-      <el-checkbox-button v-for="(label, index) in weekSetting" :key="index" :label="label">
+      <el-checkbox-button v-for="(label, index) in weekSetting" :key="index" :value="label">
         {{ label }}
       </el-checkbox-button>
     </el-checkbox-group>

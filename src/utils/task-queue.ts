@@ -10,6 +10,18 @@ export default class ClockQueue {
     this.__init_event__();
   }
 
+  getTaskLength() {
+    return this.tasks.length;
+  }
+
+  getCurrentTask() {
+    return this.currentTask;
+  }
+
+  findTask(name: string) {
+    return this.tasks.find(task => task.name === name);
+  }
+
   __init_event__() {
     ipcRenderer.on('audio-end', () => {
       this.timer && clearTimeout(this.timer);

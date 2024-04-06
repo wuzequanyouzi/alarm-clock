@@ -30,7 +30,7 @@
     </div>
     <div class="save-button">
       <el-button class="button-dom" size="large" round @click="handleSave">保存</el-button>
-      <el-button class="button-dom" size="large" round >预览</el-button>
+      <el-button class="button-dom" size="large" round @click="handleTry">预览</el-button>
     </div>
   </div>
 </template>
@@ -57,11 +57,11 @@ const props = defineProps({
 
 const _clockInfo = ref(props.clockInfo);
 
-const emit = defineEmits(['save-config', 'change-time']);
+const emit = defineEmits(['save-config', 'change-time', 'try-play']);
 
-const handleTry = (clockInfo: any) => {
+const handleTry = () => {
   // ipcRenderer.send('clock-now', JSON.stringify(clockInfo));
-  // emit('save-config', clockInfo)
+  emit('try-play', _clockInfo.value)
 };
 
 watch(() => props.clockInfo, (newVal) => {

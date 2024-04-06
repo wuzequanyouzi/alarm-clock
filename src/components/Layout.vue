@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2024-04-04 20:55:34
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-04 20:57:38
+ * @LastEditTime: 2024-04-06 20:01:27
  * @FilePath: \alarm-clock\src\components\Layout.vue
  * @Description: 
  * 
@@ -15,6 +15,7 @@
           v-for="menuItem in menu"
           :key="menuItem.key"
           :index="menuItem.key"
+          @click="handleJump(menuItem)"
         >
           <div class="menu-item">
             <i class="iconfont" :class="menuItem.icon"></i>
@@ -24,20 +25,37 @@
       </el-menu>
     </div>
     <div class="layout--right">
-      <slot name="content"> 123 </slot>
+      <RouterView v-slot="{ Component }" >
+        <KeepAlive :include="props.keepAlive">
+          <component :is="Component" />
+        </KeepAlive>
+      </RouterView>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, defineProps } from 'vue';
+import { useRouter } from 'vue-router';
+
 const props = defineProps({
   menu: {
     type: Object,
     default: () => ({}),
   },
+  keepAlive: {
+    type: Array as () => any[],
+    default: () => [],
+  }
 });
+
+const router = useRouter();
 const activeMenuItem = ref('0');
+
+const handleJump = (menuItem: any) => {
+  router.replace({ name: menuItem.name });
+}
+
 </script>
 
 <style lang="scss" scoped>

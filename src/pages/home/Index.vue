@@ -2,19 +2,21 @@
  * @Author: zequan.wu
  * @Date: 2023-07-18 11:32:54
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-06 17:13:25
+ * @LastEditTime: 2024-04-06 20:37:02
  * @FilePath: \alarm-clock\src\pages\home\Index.vue
  * @Description: 
  * 
 -->
 <template>
-  <Layout :menu="menu">
-    <template #content>
-      <ClockListDesc :list="clockList" @clock-now="handleClockNow" @save-config="handleSaveConfig"
-        @change-time="handleChangeTime" />
-    </template>
-  </Layout>
+  <ClockListDesc :list="clockList" @clock-now="handleClockNow" @save-config="handleSaveConfig"
+    @change-time="handleChangeTime" @try-play="handleTryPlay"/>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'Home'
+}
+</script>
 
 <script lang="ts" setup>
 import { Clock } from '@/types/index';
@@ -25,20 +27,7 @@ import dayjs from 'dayjs';
 import ClockListDesc from './components/ClockListDesc.vue';
 import { clockQueue } from '../../utils/task-queue';
 import { getUrlByFile } from '../../utils/handleFile';
-
-// 菜单
-const menu = ref([
-  {
-    key: '0',
-    label: '个性闹钟',
-    icon: 'icon-lingsheng',
-  },
-  {
-    key: '1',
-    label: '设置',
-    icon: 'icon-chuanduo',
-  },
-]);
+import { ElMessage } from 'element-plus';
 
 // 铃声列表
 const clockList = ref<Clock[]>([]);
@@ -96,7 +85,9 @@ const handleClockNow = (timeInfo: Clock, key: string) => {
   const { key: _key } = timeInfo;
   // 以某个闹钟的key+对应时间标识唯一任务
   clockQueue.addTask(`${_key}_${key}`, timeInfo, 30000, () => {
-    timeInfo.clockTime.delete(key);
+    if (key !== 'try-play') {
+      timeInfo.clockTime.delete(key);
+    }
     const afterNowDate = timeInfo.time.map((timeStr) => {
       return dayjs(timeStr, "HH:mm:ss").valueOf();
     }).some(item => item > nowDate)
@@ -110,6 +101,25 @@ const handleClockNow = (timeInfo: Clock, key: string) => {
     }
   });
   clockQueue.start();
+}
+
+const handleTryPlay = (timeInfo: Clock) => {
+  const _ = {
+    ...timeInfo,
+    key: 'try'
+  }
+  if (clockQueue.getTaskLength() > 0) {
+    ElMessage.warning('请先停止当前闹钟');
+    return;
+  }
+  const { key } = _;
+  const tryKey = `${key}_try-play`;
+  // TODO: 预览的时候，有个时延任务，如何跳过
+  if (clockQueue.findTask(tryKey) || clockQueue.getCurrentTask()?.name === tryKey) {
+    ElMessage.warning('正在预览!');
+    return;
+  }
+  handleClockNow(_, 'try-play');
 }
 
 const getSetting = () => {

@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2024-04-06 14:27:18
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-06 18:54:01
+ * @LastEditTime: 2024-04-06 20:07:36
  * @FilePath: \alarm-clock\src\pages\home\components\card\Index.vue
  * @Description: 
  * 
@@ -18,7 +18,7 @@
           accept="image/*"
           @change="handleSelectFile"
         >
-          <img v-if="currentUrl" :src="currentUrl.blob" class="avatar" />
+          <img v-if="currentUrl" :src="currentUrl.blob || normalImg" class="avatar" />
           <div class="normal-avatar" v-else>
             <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
           </div>
@@ -50,6 +50,7 @@ import { Avatar, Clock } from "../../../../types/index";
 import { ref, watch, defineModel, defineProps, defineEmits } from "vue";
 import { getUrlByFile } from "../../../../utils/handleFile";
 import InputLabel from "../input-label/Index.vue";
+import normalImg from '../../../../assets/images/normalImg.png';
 
 const props = defineProps({
   clockInfo: {
