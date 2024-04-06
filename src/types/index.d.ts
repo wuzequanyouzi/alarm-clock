@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2024-04-04 20:55:34
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-05 12:23:29
+ * @LastEditTime: 2024-04-06 18:42:41
  * @FilePath: \alarm-clock\src\types\index.d.ts
  * @Description: 
  * 
@@ -15,7 +15,7 @@ export interface AudioInfo {
   enable?: boolean;
   date?: (string | number)[];
   time?: string[];
-  avatar?: string;
+  avatar?: Avatar;
   formatTime?: any;
   name?: string;
 }
@@ -23,9 +23,19 @@ export interface AudioInfo {
 export type Music = {
   path: string,
   name: string,
-  type: string
+  type: string,
+  notDelete?: boolean,
 }
 
+export type Avatar = {
+  path: string,
+  blob: string,
+  normal?: boolean,
+}
+
+export type HtmlStyleAttr = {
+  [key: string]: string | number | boolean | undefined;
+}
 export interface Clock {
   key: number | string;
   title: string;
@@ -35,9 +45,10 @@ export interface Clock {
   week: boolean[];
   date: (string | number)[];
   time: string[];
-  avatar: string;
+  avatar: Avatar;
   clockTime: any;
-  style?: string;
+  style?: HtmlStyleAttr;
+  name?: string;
 }
 
 export interface Task {

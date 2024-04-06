@@ -2,11 +2,11 @@
   <div class="clock-main">
     <!-- 背景图片高斯模糊 -->
     <div class="clock-main-bg">
-      <img class="image" :src="audioInfo.avatar" />
+      <img class="image" :src="audioInfo.avatar.blob" />
     </div>
     <div class="clock-main-container">
       <div class="clock-main-container__avatar">
-        <img class="image avatar" :src="audioInfo.avatar" />
+        <img class="image avatar" :src="audioInfo.avatar.blob" />
         <span>{{ audioInfo.name }}</span>
       </div>
 
@@ -22,21 +22,10 @@
 
 <script lang="ts" setup>
 import { defineProps, PropType, defineEmits } from 'vue';
-interface AudioInfo {
-  key?: number;
-  title?: string;
-  audio?: string;
-  desc?: string;
-  enable?: boolean;
-  date?: (string | number)[];
-  time?: string[];
-  avatar?: string;
-  formatTime?: any;
-  name?: string;
-}
+import { Clock } from '../../../types/index';
 const props = defineProps({
   audioInfo: {
-    type: Object as PropType<AudioInfo>,
+    type: Object as PropType<Clock>,
     default: () => ({}),
   },
 });

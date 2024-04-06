@@ -1,5 +1,5 @@
 <template>
-  <div class="clock-desc">
+  <div class="clock-desc clock-scrollbar">
     <div class="clock-desc-container">
       <div class="clock-desc--header">
         设置
@@ -12,11 +12,15 @@
         </Block>
         
         <Block :size="26" icon="icon-music" label="铃声">
-          <MusicItem :currentMusic="_clockInfo.audio"/>
+          <MusicItem :currentMusic="_clockInfo.audio" @useMusic="handleUseMusic" @deleteMusic="handleDeleteMusic"/>
         </Block>
 
         <Block icon="icon-riqi" label="重复设置">
           <WeekCheckbox style="margin-top: 10px;" v-model="_clockInfo.week" />
+        </Block>
+
+        <Block icon="icon-card" :size="28" label="卡片样式">
+          <Card :clockInfo="_clockInfo" v-model:avatar="_clockInfo.avatar" @updateInfo="handleUpdateInfo"/>
         </Block>
 
         <Block :size="26" icon="icon-enable" label="启用">
@@ -32,10 +36,11 @@
 </template>
 
 <script lang="ts" setup>
-import { Clock } from "../../../../types/index.d";
+import { Clock, Music } from "../../../../types/index.d";
 import Block from '../../../../components/Block.vue';
 import Time from './time/index.vue';
 import MusicItem from './music-item/Index.vue';
+import Card from '../card/Index.vue'
 import WeekCheckbox from './week-checkbox/index.vue';
 import { defineProps } from 'vue';
 import SelectClockDialog from './select-clock-dialog/index.vue';
@@ -61,7 +66,8 @@ const handleTry = (clockInfo: any) => {
 
 watch(() => props.clockInfo, (newVal) => {
   _clockInfo.value = JSON.parse(JSON.stringify(newVal));
-  console.log(_clockInfo)
+}, {
+  immediate: true
 })
 
 const handleChangeTime = (time: number, type = 'add') => {
@@ -75,6 +81,18 @@ const handleChangeTime = (time: number, type = 'add') => {
   } else {
     _clockInfo.value.time = _clockInfo.value.time.filter(item => item !== timeStr);
   }
+}
+const handleUseMusic = (music: Music) => {
+  _clockInfo.value.audio = music;
+}
+const handleDeleteMusic = () => {
+  _clockInfo.value.audio = { name: '', path: '', type: '' };
+}
+const handleUpdateInfo =(key: string, value: any) => {
+  _clockInfo.value = {
+    ..._clockInfo.value,
+    [key]: value
+  };
 }
 
 const checkClockInfo = () => {
@@ -97,6 +115,8 @@ const handleSave = () => {
 
 <style lang="scss" scoped>
 .clock-desc {
+  border-radius: 8px;
+  background-color: #edeef2;
   height: 100%;
   overflow-y: auto;
   padding: 10px 10px 0;
@@ -105,7 +125,7 @@ const handleSave = () => {
 
   &-container {
     background-color: #edeef2;
-    height: 100%;
+    height: auto;
     border-radius: 8px;
   }
 
@@ -126,10 +146,9 @@ const handleSave = () => {
 
   .save-button {
     margin: auto;
-    position: absolute;
+    position: sticky;
     bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    text-align: center;
     .button-dom {
       padding: 0 30px 0;
     }

@@ -20,13 +20,20 @@ export const getInitClockInfo = () => {
   const clockInfo:Clock = {
     key: generateUUID(),
     title: '',
-    audio: '',
+    audio: {
+      name: '',
+      path: '',
+      type: ''
+    },
     desc: '',
     enable: false,
     week: Array(7).fill(false),
     date: [],
     time: [],
-    avatar: '',
+    avatar: {
+      path: '',
+      blob: ''
+    },
     clockTime: '',
     style: ''
   }

@@ -2,8 +2,8 @@
  * @Author: zequan.wu
  * @Date: 2024-04-04 20:55:34
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-05 10:47:37
- * @FilePath: \alarm-clock\src\pages\home\components\clock-list\index.vue
+ * @LastEditTime: 2024-04-06 16:33:01
+ * @FilePath: \alarm-clock\src\pages\home\components\clock-list\Index.vue
  * @Description: 
  * 
 -->
@@ -14,7 +14,7 @@
       <div class="clock-list--item">
         <div class="clock-list--item_top" :style="item.style">
           <div style="display: flex; align-items: center;">
-            <el-avatar :size="50" :src="item.avatar" />
+            <el-avatar :size="50" :src="item.avatar.blob" />
           </div>
           <div class="clock-list--item_desc">
             <div class="clock-list--item_desc-title">
@@ -49,7 +49,7 @@ const props = defineProps({
     default: () => [],
   },
   currentKey: {
-    type: Number,
+    type: [Number, String],
     default: 1
   }
 });

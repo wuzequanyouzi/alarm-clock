@@ -1,4 +1,6 @@
 import { ipcRenderer, contextBridge } from 'electron'
+import fs from 'node:fs/promises'
+import path from 'node:path';
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
@@ -22,6 +24,10 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
 })
+
+contextBridge.exposeInMainWorld('fs', fs);
+contextBridge.exposeInMainWorld('nodePath', path);
+contextBridge.exposeInMainWorld('__dirname__', __dirname);
 
 // --------- Preload scripts loading ---------
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {

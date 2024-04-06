@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2024-04-04 20:55:34
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-04 22:18:23
+ * @LastEditTime: 2024-04-06 16:33:06
  * @FilePath: \alarm-clock\src\pages\home\components\ClockListDesc.vue
  * @Description: 
  * 
@@ -19,13 +19,31 @@
 </template>
 
 <script lang="ts" setup>
-import { List, Clock } from '../../../types/index';
+import { Clock } from '../../../types/index';
 import { ref, watch, useAttrs } from 'vue';
 import ClockList from './clock-list/Index.vue';
 import ClockDesc from './clock-desc/index.vue';
 
-const currentClockInfo = ref({});
-const currentKey = ref(0);
+const currentClockInfo = ref<Clock>({
+  key: 0,
+  title: '',
+  audio: {
+    name: '',
+    path: '',
+    type: ''
+  },
+  desc: '',
+  enable: false,
+  week: [],
+  date: [],
+  time: [],
+  avatar: {
+    path: '',
+    blob: ''
+  },
+  clockTime: '',
+});
+const currentKey = ref<string | number>(0);
 const attrs = useAttrs();
 
 const handleClick = (item: any) => {
@@ -36,7 +54,7 @@ const handleAdd = (clockInfo: Clock) => {
   currentClockInfo.value = clockInfo;
 }
 
-watch((attrs.list as List[]), (newVal: List[]) => {
+watch((attrs.list as Clock[]), (newVal: Clock[]) => {
   if (newVal?.[0]) {
     currentClockInfo.value = newVal[0];
     currentKey.value = (currentClockInfo.value as Clock).key;

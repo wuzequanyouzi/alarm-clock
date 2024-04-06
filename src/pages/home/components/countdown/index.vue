@@ -77,7 +77,6 @@ const formatTime = (key:string, alarmTime: number) => {
 };
 
 watchEffect(() => {
-  console.log(props.clock?.clockTime)
   if (timer) {
     clearInterval(timer);
   }

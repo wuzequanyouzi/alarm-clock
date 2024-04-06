@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2023-07-18 11:32:54
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-05 12:51:07
+ * @LastEditTime: 2024-04-06 17:13:25
  * @FilePath: \alarm-clock\src\pages\home\Index.vue
  * @Description: 
  * 
@@ -23,9 +23,8 @@ import { ref, onBeforeUnmount, onBeforeMount } from 'vue';
 import Layout from '../../components/Layout.vue';
 import dayjs from 'dayjs';
 import ClockListDesc from './components/ClockListDesc.vue';
-import zhangyugeSrc from '../../assets/images/zhangyuge.png';
-import zhangyugeAudio from '../../assets/mp3/zhangyuge.mp3';
 import { clockQueue } from '../../utils/task-queue';
+import { getUrlByFile } from '../../utils/handleFile';
 
 // 菜单
 const menu = ref([
@@ -117,7 +116,15 @@ const getSetting = () => {
   const settingTxt = localStorage.getItem('clock-setting');
   let setting = [];
   if (settingTxt) {
-    setting = JSON.parse(settingTxt);
+    setting = JSON.parse(settingTxt).map(item => {
+      return {
+        ...item,
+        avatar: {
+          ...item.avatar,
+          blob: item.avatar.normal ? item.avatar.blob : ''
+        }
+      }
+    });
   }
   return setting;
 }
@@ -158,6 +165,11 @@ const loadSetting = () => {
     clockList.value = setting.map((item: any) => {
       item.clockTime = new Map();
       return item;
+    })
+    clockList.value.forEach((item) => {
+      !item.avatar.normal && getUrlByFile(item.avatar.path).then((blob: string) => {
+        item.avatar.blob = blob;
+      })
     })
   } else {
     clockList.value = getNorMalClockList();

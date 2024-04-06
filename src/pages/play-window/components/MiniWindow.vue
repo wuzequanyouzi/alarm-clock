@@ -1,10 +1,10 @@
 <template>
   <div class="clock-mini">
     <div class="clock-mini--avatar">
-      <el-avatar :size="50" :src="audioInfo.avatar" />
+      <el-avatar :size="50" :src="audioInfo.avatar.blob" />
     </div>
     <div class="clock-mini--container">
-      <span class="clock-mini--container-name">{{ audioInfo.name }}</span>
+      <span class="clock-mini--container-name">{{ audioInfo?.name }}</span>
       <div class="options">
         <div class="box connect" @click="handleConnect">
           <i class="iconfont icon-laidian"></i>
@@ -18,22 +18,11 @@
 </template>
 
 <script lang="ts" setup>
+import { Clock } from '../../../types/index';
 import { defineProps, PropType, defineEmits } from 'vue';
-interface AudioInfo {
-  key?: number;
-  title?: string;
-  audio?: string;
-  desc?: string;
-  enable?: boolean;
-  date?: (string | number)[];
-  time?: string[];
-  avatar?: string;
-  formatTime?: any;
-  name?: string;
-}
 const props = defineProps({
   audioInfo: {
-    type: Object as PropType<AudioInfo>,
+    type: Object as PropType<Clock>,
     default: () => ({}),
   },
 });

@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2024-04-05 12:45:29
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-05 13:06:20
+ * @LastEditTime: 2024-04-06 17:04:27
  * @FilePath: \alarm-clock\src\config\index.ts
  * @Description: 
  * 
@@ -15,7 +15,8 @@ export const getNormalMusicList = (): Music[] => [
   {
     name: '章鱼哥',
     path: zhangyugeAudio,
-    type: 'audio/mp3'
+    type: 'audio/mp3',
+    notDelete: true,
   },
 ]
 
@@ -29,7 +30,11 @@ export const getNormalClock = (): Clock => {
     week: [true, true, true, true, false, false, false], // 下标表示星期
     date: [],
     time: ['21:20:20', '23:33:25'],
-    avatar: zhangyugeSrc,
+    avatar: {
+      path: zhangyugeSrc,
+      blob: zhangyugeSrc,
+      normal: true
+    },
     clockTime: new Map()
   }
 }
