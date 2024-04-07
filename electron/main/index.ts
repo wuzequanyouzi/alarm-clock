@@ -1,3 +1,12 @@
+/*
+ * @Author: zequan.wu
+ * @Date: 2024-04-03 16:00:03
+ * @LastEditors: zequan.wu
+ * @LastEditTime: 2024-04-07 16:36:40
+ * @FilePath: \alarm-clock\electron\main\index.ts
+ * @Description: 
+ * 
+ */
 // 必须先初始化全局变量
 import { preload } from './initConfig';
 import { app, BrowserWindow, shell, ipcMain, screen, Menu } from 'electron'
@@ -52,7 +61,6 @@ async function createWindow() {
   if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
     win.loadURL(url)
     // Open devTool if the app is not packaged
-    win.webContents.openDevTools()
   } else {
     win.loadFile(indexHtml)
   }
@@ -73,6 +81,10 @@ async function createWindow() {
   // 读取配置
   ipcMain.on('loadConfig', () => {
     win.webContents.send('setConfig', setting);
+  })
+
+  win.on('close', () => {
+    app.quit();
   })
 }
 

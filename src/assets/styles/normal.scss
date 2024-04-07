@@ -1,3 +1,4 @@
+
 .btn-active:active {
   transform: scale(0.9);
 }
@@ -32,7 +33,7 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url(./logo.jpg);
+  background-image: url(../images/logo.jpg);
   opacity: 0.1; /* 设置透明度为50% */
   pointer-events: none;
 }

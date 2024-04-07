@@ -1,7 +1,16 @@
+<!--
+ * @Author: zequan.wu
+ * @Date: 2024-04-03 16:00:03
+ * @LastEditors: zequan.wu
+ * @LastEditTime: 2024-04-07 16:34:04
+ * @FilePath: \alarm-clock\src\pages\play-window\components\MiniWindow.vue
+ * @Description: 
+ * 
+-->
 <template>
   <div class="clock-mini">
     <div class="clock-mini--avatar">
-      <el-avatar :size="50" :src="audioInfo.avatar.blob" />
+      <el-avatar :size="50" :src="audioInfo?.avatar?.blob" />
     </div>
     <div class="clock-mini--container">
       <span class="clock-mini--container-name">{{ audioInfo?.name }}</span>
