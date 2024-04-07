@@ -35,7 +35,7 @@ export const getInitClockInfo = () => {
       blob: ''
     },
     clockTime: '',
-    style: ''
+    style: {}
   }
   return clockInfo;
 }

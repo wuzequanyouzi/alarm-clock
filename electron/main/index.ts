@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2024-04-03 16:00:03
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-07 16:36:40
+ * @LastEditTime: 2024-04-07 17:50:10
  * @FilePath: \alarm-clock\electron\main\index.ts
  * @Description: 
  * 
@@ -56,11 +56,12 @@ async function createWindow() {
       // contextIsolation: false,
     },
   })
-  Menu.setApplicationMenu(null);
+  // Menu.setApplicationMenu(null);
 
   if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
     win.loadURL(url)
     // Open devTool if the app is not packaged
+    win.webContents.openDevTools()
   } else {
     win.loadFile(indexHtml)
   }
