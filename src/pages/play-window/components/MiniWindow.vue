@@ -2,7 +2,7 @@
  * @Author: zequan.wu
  * @Date: 2024-04-03 16:00:03
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-07 16:34:04
+ * @LastEditTime: 2024-04-07 18:02:37
  * @FilePath: \alarm-clock\src\pages\play-window\components\MiniWindow.vue
  * @Description: 
  * 
@@ -50,8 +50,8 @@ const handleBreak = () => {
 <style lang="scss" scoped>
 .clock-mini {
   user-select: none;
-  width: 340px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   background-color: #424347;
   display: flex;
   align-items: center;
