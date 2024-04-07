@@ -3,7 +3,7 @@
  */
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "youzi",
+  "appId": "com.youzi.app",
   "asar": true,
   "productName": "来电提醒",
   "directories": {
@@ -36,7 +36,7 @@
     "oneClick": false,
     "perMachine": false,
     "allowToChangeInstallationDirectory": true,
-    "deleteAppDataOnUninstall": false
+    "deleteAppDataOnUninstall": true
   },
   "linux": {
     icon: 'public/logo.jpg',
