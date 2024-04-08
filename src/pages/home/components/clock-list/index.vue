@@ -1,35 +1,31 @@
-<!--
- * @Author: zequan.wu
- * @Date: 2024-04-04 20:55:34
- * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-06 16:33:01
- * @FilePath: \alarm-clock\src\pages\home\components\clock-list\Index.vue
- * @Description: 
- * 
--->
 <template>
   <div class="clock-list">
     <el-card class="box-card" v-for="item in props.list" :shadow="current === item.key ? 'always' : 'hover'"
       @click="(event: Event) => handleClick(event, item)">
-      <div class="clock-list--item">
-        <div class="clock-list--item_top" :style="item.style">
-          <div style="display: flex; align-items: center;">
-            <el-avatar :size="50" :src="item.avatar.blob" />
-          </div>
-          <div class="clock-list--item_desc">
-            <div class="clock-list--item_desc-title">
-              {{ item.title }}
-            </div>
-            <div class="clock-list--item_desc-content">
-              {{ item.desc }}
-            </div>
-          </div>
+      <div class="box-card__wrap" style="position: relative">
+        <div class="remove-btn" @mouseenter="mouseIndex = item.key" @mouseleave="mouseIndex = null" @click="handleRemove(item)">
+          <i class="iconfont icon-delete1"></i>
         </div>
-        <Transition name="enable">
-          <div class="clock-list--item_bottom" :class="{ 'not-enable': !item.enable }" >
-            <CountDown style="transform: translateY(-10px);" v-bind="$attrs" :clock="item" />
+        <div class="clock-list--item animate__animated" :class="{ 'animate__tada': mouseIndex === item.key }">
+          <div class="clock-list--item_top" :style="item.style">
+            <div style="display: flex; align-items: center;">
+              <el-avatar :size="50" :src="item.avatar.blob" />
+            </div>
+            <div class="clock-list--item_desc">
+              <div class="clock-list--item_desc-title">
+                {{ item.title }}
+              </div>
+              <div class="clock-list--item_desc-content">
+                {{ item.desc }}
+              </div>
+            </div>
           </div>
-        </Transition>
+          <Transition name="enable">
+            <div class="clock-list--item_bottom" :class="{ 'not-enable': !item.enable }" >
+              <CountDown style="transform: translateY(-10px);" v-bind="$attrs" :clock="item" />
+            </div>
+          </Transition>
+        </div>
       </div>
     </el-card>
     <AddCard class="add-card" :shadow="current === ADD_KEY ? 'always' : 'hover'" @click="handleAdd"/>
@@ -56,9 +52,10 @@ const props = defineProps({
 
 const ADD_KEY = -1;
 
-const emit = defineEmits(["click", 'add']);
+const emit = defineEmits(["click", 'add', 'remove']);
 
 const current = ref(props.currentKey);
+const mouseIndex = ref(null);
 
 const handleClick = (event: Event, item: any) => {
   current.value = item.key;
@@ -69,6 +66,10 @@ const handleAdd = () => {
   const clockInfo = getInitClockInfo();
   current.value = clockInfo.key;
   emit("add", clockInfo);
+}
+
+const handleRemove = (clock: Clock) => {
+  emit("remove", clock);
 }
 
 </script>
@@ -116,12 +117,31 @@ const handleAdd = () => {
     margin-bottom: 4px;
   }
 
+  .box-card__wrap:hover>.remove-btn {
+    opacity: 1;
+  }
+  .remove-btn {
+    transition: all 0.3s;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    right: -2px;
+    z-index: 10;
+    padding: 4px;
+    background-color: #ccc;
+    border-radius: 2px;
+    cursor: pointer;
+    .icon-delete1 {
+      font-size: 20px;
+    }
+  }
+
+
   &--item {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     &_top {
       z-index: 1;
       padding: 14px 10px;

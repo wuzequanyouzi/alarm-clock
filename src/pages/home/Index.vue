@@ -2,14 +2,14 @@
  * @Author: zequan.wu
  * @Date: 2023-07-18 11:32:54
  * @LastEditors: zequan.wu
- * @LastEditTime: 2024-04-06 20:37:02
+ * @LastEditTime: 2024-04-08 10:55:42
  * @FilePath: \alarm-clock\src\pages\home\Index.vue
  * @Description: 
  * 
 -->
 <template>
   <ClockListDesc :list="clockList" @clock-now="handleClockNow" @save-config="handleSaveConfig"
-    @change-time="handleChangeTime" @try-play="handleTryPlay"/>
+    @change-time="handleChangeTime" @try-play="handleTryPlay" @remove="handleRemove"/>
 </template>
 
 <script lang="ts">
@@ -120,6 +120,14 @@ const handleTryPlay = (timeInfo: Clock) => {
     return;
   }
   handleClockNow(_, 'try-play');
+}
+
+const handleRemove = (clockInfo: Clock) => {
+  const findIndex = clockList.value.findIndex((item) => item.key === clockInfo.key);
+  if (findIndex !== -1) {
+    clockList.value.splice(findIndex, 1);
+    localStorage.setItem('clock-setting', JSON.stringify(clockList.value));
+  }
 }
 
 const getSetting = () => {
