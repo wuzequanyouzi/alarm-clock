@@ -3,7 +3,7 @@
     <el-card class="box-card" v-for="item in props.list" :shadow="current === item.key ? 'always' : 'hover'"
       @click="(event: Event) => handleClick(event, item)">
       <div class="box-card__wrap" style="position: relative">
-        <div class="remove-btn" @mouseenter="mouseIndex = item.key" @mouseleave="mouseIndex = null" @click="handleRemove(item)">
+        <div class="remove-btn" @mouseenter="mouseIndex = item.key" @mouseleave="mouseIndex = null" @click="(event) => handleRemove(event, item)">
           <i class="iconfont icon-delete1"></i>
         </div>
         <div class="clock-list--item animate__animated" :class="{ 'animate__tada': mouseIndex === item.key }">
@@ -68,7 +68,8 @@ const handleAdd = () => {
   emit("add", clockInfo);
 }
 
-const handleRemove = (clock: Clock) => {
+const handleRemove = (event, clock: Clock) => {
+  event.stopPropagation();
   emit("remove", clock);
 }
 
